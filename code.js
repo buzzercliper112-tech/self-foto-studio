@@ -1,41 +1,73 @@
-// Ambil nama client dari URL
 const clientName = new URLSearchParams(window.location.search).get('client');
-
-// Tampilkan nama client di judul
 document.getElementById("client-title").textContent = clientName ? `Hi ${clientName}, enjoy your moment!` : "SELF-FOTO-STUDIO";
 
+const gallery = document.getElementById("gallery");
+
+// Modal elements
+const modal = document.getElementById("modal");
+const modalContent = document.getElementById("modal-content");
+const modalClose = document.getElementById("modal-close");
+const modalDownload = document.getElementById("modal-download");
+
+function openModal(url, name, type) {
+  modal.style.display = "flex";
+  modalContent.innerHTML = "";
+  let media;
+  if(type.startsWith("image/")){
+    media = document.createElement("img");
+  } else if(type.startsWith("video/")){
+    media = document.createElement("video");
+    media.controls = true;
+    media.autoplay = true;
+  }
+  media.src = url;
+  modalContent.appendChild(media);
+  modalDownload.href = url;
+  modalDownload.download = name;
+}
+
+modalClose.onclick = () => { modal.style.display = "none"; }
+
 if(clientName){
-  // Fetch data JSON dari Google Apps Script Web App
-  fetch("https://script.google.com/macros/s/AKfycbwJy6jXBLHOYz57CJZYV_fWgDGtXJp53YKor7IAZCGmNVKBy67d24yRNuvresXBtVEJ/exec?client=" + clientName)
+  fetch("https://script.google.com/macros/s/AKfycbx_hn5jKd8lt37S6Fh-dMZE1iyhipalvX0WUZqtU_XyMoHLWM1X-biH7zruKA2mqq-R/exec?client=" + encodeURIComponent(clientName))
     .then(res => res.json())
     .then(files => {
-      const gallery = document.getElementById("gallery");
-
+      gallery.innerHTML = "";
       files.forEach(file => {
         const div = document.createElement("div");
         div.className = "item";
 
-        // Preview gambar
+        // Thumbnail
+        let thumb;
         if(file.mime.startsWith("image/")){
-          const img = document.createElement("img");
-          img.src = file.url;
-          img.alt = file.name;
-          img.onclick = () => window.open(file.url, "_blank"); // klik → download ukuran penuh
-          div.appendChild(img);
-
-        // Preview video
+          thumb = document.createElement("img");
         } else if(file.mime.startsWith("video/")){
-          const video = document.createElement("video");
-          video.src = file.url;
-          video.controls = true;
-          div.appendChild(video);
+          thumb = document.createElement("video");
+          thumb.muted = true;
+          thumb.loop = true;
+          thumb.autoplay = true;
         }
+        thumb.src = file.url;
+        div.appendChild(thumb);
 
-        // Tombol download
+        // Caption
+        const caption = document.createElement("div");
+        caption.className = "caption";
+        caption.textContent = file.name;
+        div.appendChild(caption);
+
+        // Klik thumbnail → modal
+        div.onclick = () => openModal(file.url, file.name, file.mime);
+
+        // Tombol download full-size
         const a = document.createElement("a");
         a.href = file.url;
         a.download = file.name;
-        a.textContent = "Download";
+        a.textContent = "Download Full-Size";
+        a.style.display = "block";
+        a.style.textAlign = "center";
+        a.style.marginTop = "5px";
+        a.style.color = "blue";
         div.appendChild(a);
 
         gallery.appendChild(div);
@@ -43,9 +75,8 @@ if(clientName){
     })
     .catch(err => {
       console.error("Error fetching files:", err);
-      document.getElementById("gallery").innerHTML = "<p>Terjadi kesalahan saat memuat file.</p>";
+      gallery.innerHTML = "<p>Terjadi kesalahan saat memuat file.</p>";
     });
-
 }else{
-  document.getElementById("gallery").innerHTML = "<p>Pilih client untuk menampilkan foto/video</p>";
+  gallery.innerHTML = "<p>Pilih client untuk menampilkan foto/video</p>";
 }
