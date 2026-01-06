@@ -5,103 +5,33 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SELF-FOTO-STUDIO</title>
 <style>
-/* Global */
 body {font-family:sans-serif;margin:0;padding:0;background:#f0f0f0;}
 header {padding:20px;text-align:center;background:#222;color:white;}
 h1 {margin:0;font-size:24px;}
-
-/* Gallery grid */
-#gallery {
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
-  gap:10px;
-  padding:20px;
-}
-
-/* Item style */
-.item {
-  position:relative;
-  overflow:hidden;
-  border-radius:10px;
-  cursor:pointer;
-  transition:transform 0.2s;
-  background:white;
-  padding:5px;
-}
-.item img, .item video {
-  width:100%;
-  height:auto;
-  border-radius:5px;
-}
-.item:hover {
-  transform:scale(1.05);
-}
-.caption {
-  text-align:center;
-  margin-top:5px;
-  font-size:14px;
-  font-weight:bold;
-}
-
-/* Modal style */
-.modal {
-  display:none;
-  position:fixed;
-  z-index:999;
-  left:0;
-  top:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.8);
-  justify-content:center;
-  align-items:center;
-}
-.modal-content {
-  position:relative;
-  max-width:90%;
-  max-height:90%;
-}
-.modal-content img, .modal-content video {
-  width:100%;
-  height:auto;
-}
-.modal-close {
-  position:absolute;
-  top:10px;
-  right:10px;
-  font-size:24px;
-  color:white;
-  cursor:pointer;
-}
-.modal-download {
-  position:absolute;
-  bottom:10px;
-  right:10px;
-  background:white;
-  padding:5px 10px;
-  border-radius:5px;
-  text-decoration:none;
-  color:black;
-  font-weight:bold;
-}
+#gallery {display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;padding:20px;}
+.item {position:relative;overflow:hidden;border-radius:10px;cursor:pointer;transition:transform 0.2s;background:white;padding:5px;}
+.item img, .item video {width:100%;height:auto;border-radius:5px;}
+.item:hover {transform:scale(1.05);}
+.caption {text-align:center;margin-top:5px;font-size:14px;font-weight:bold;}
+.modal {display:none;position:fixed;z-index:999;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.8);justify-content:center;align-items:center;}
+.modal-content {position:relative;max-width:90%;max-height:90%;}
+.modal-content img, .modal-content video {width:100%;height:auto;}
+.modal-close {position:absolute;top:10px;right:10px;font-size:24px;color:white;cursor:pointer;}
+.modal-download {position:absolute;bottom:10px;right:10px;background:white;padding:5px 10px;border-radius:5px;text-decoration:none;color:black;font-weight:bold;}
 </style>
 </head>
 <body>
 <header>
 <h1 id="client-title">SELF-FOTO-STUDIO</h1>
 </header>
-
-<!-- Gallery -->
 <div id="gallery">Loading...</div>
 
-<!-- Modal -->
 <div class="modal" id="modal">
   <span class="modal-close" id="modal-close">&times;</span>
   <div class="modal-content" id="modal-content"></div>
   <a href="#" class="modal-download" id="modal-download" download>Download Full-Size</a>
 </div>
 
-<!-- JS -->
 <script src="code.js"></script>
 </body>
 </html>

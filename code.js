@@ -2,8 +2,6 @@ const clientName = new URLSearchParams(window.location.search).get('client');
 document.getElementById("client-title").textContent = clientName ? `Hi ${clientName}, enjoy your moment!` : "SELF-FOTO-STUDIO";
 
 const gallery = document.getElementById("gallery");
-
-// Modal elements
 const modal = document.getElementById("modal");
 const modalContent = document.getElementById("modal-content");
 const modalClose = document.getElementById("modal-close");
@@ -29,7 +27,7 @@ function openModal(url, name, type) {
 modalClose.onclick = () => { modal.style.display = "none"; }
 
 if(clientName){
-  fetch("https://script.google.com/macros/s/AKfycbx_hn5jKd8lt37S6Fh-dMZE1iyhipalvX0WUZqtU_XyMoHLWM1X-biH7zruKA2mqq-R/exec?client=" + encodeURIComponent(clientName))
+  fetch("https://script.google.com/macros/s/AKfycbzUXZiQ-walGMhyotmSHLoku8yuYe4n75-mJtMLEYH4t7zZFIuHvQlkJhi1lqVGhtf2ew/exec?client=" + encodeURIComponent(clientName))
     .then(res => res.json())
     .then(files => {
       gallery.innerHTML = "";
@@ -37,7 +35,6 @@ if(clientName){
         const div = document.createElement("div");
         div.className = "item";
 
-        // Thumbnail
         let thumb;
         if(file.mime.startsWith("image/")){
           thumb = document.createElement("img");
@@ -50,16 +47,13 @@ if(clientName){
         thumb.src = file.url;
         div.appendChild(thumb);
 
-        // Caption
         const caption = document.createElement("div");
         caption.className = "caption";
         caption.textContent = file.name;
         div.appendChild(caption);
 
-        // Klik thumbnail → modal
         div.onclick = () => openModal(file.url, file.name, file.mime);
 
-        // Tombol download full-size
         const a = document.createElement("a");
         a.href = file.url;
         a.download = file.name;
