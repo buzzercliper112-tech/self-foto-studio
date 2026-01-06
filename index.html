@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SELF-FOTO-STUDIO</title>
+<style>
+body { font-family: sans-serif; text-align: center; background-color: #f0f0f0; margin: 0; padding: 20px; }
+h1 { color: #333; }
+#gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px; }
+img, video { max-width: 100%; border-radius: 8px; }
+</style>
+</head>
+<body>
+
+<h1>SELF-FOTO-STUDIO</h1>
+<div id="gallery"></div>
+
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const client = urlParams.get('client');
+
+// URL Web App Apps Script langsung dimasukkan di sini
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwJy6jXBLHOYz57CJZYV_fWgDGtXJp53YKor7IAZCGmNVKBy67d24yRNuvresXBtVEJ/exec";
+
+if (client) {
+  fetch(APPS_SCRIPT_URL + "?client=" + encodeURIComponent(client))
+    .then(response => response.json())
+    .then(data => {
+      const gallery = document.getElementById("gallery");
+      data.forEach(item => {
+        let el;
+        if(item.type === "image") {
+          el = document.createElement("img");
+          el.src = item.url;
+          el.alt = item.name;
+        } else if(item.type === "video") {
+          el = document.createElement("video");
+          el.src = item.url;
+          el.controls = true;
+        }
+        gallery.appendChild(el);
+      });
+    })
+    .catch(err => {
+      const gallery = document.getElementById("gallery");
+      gallery.innerHTML = "<p>Gagal memuat media client.</p>";
+      console.error(err);
+    });
+} else {
+  document.getElementById("gallery").innerHTML = "<p>Tidak ada client yang dipilih.</p>";
+}
+</script>
+
+</body>
+</html>
